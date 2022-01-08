@@ -19,3 +19,16 @@ The contract has 3 stages:
     - Note that revealing their choice before the **finalized** stage may result in their stake being *stolen*.
 2. **RevealStage** - Users can reveal what they (or others) have voted by calling ```revealVote``` with the same parameters used in the ```makeVoteHash/placeVote``` call. By doing so the call will update the result counter and claim the ```requiredStake```. After ```n``` blocks defined by the ```duration``` parameter in the constructor this stage ends and so does the vote.
 3. **Finalized** - Users can no longer reveal their vote nor claim their staked value.
+
+---
+
+Pseudo code
+```js
+const voteHash = await contract.makeVoteHash(true, encodeSecret('mysecret'))
+await contract.placeVote(voteHash, { value: requiredStake })
+// wait until RevealStage
+// reclaim your stake and reveal your choice
+await contract.revealVote(address, true, encodeSecret('mysecret'))
+// claim another voter's stake and reveal their choice
+await contract.revealVote(someoneWhoRevealedTheirVote, false, encodeSecret('theirSecret'))
+```
